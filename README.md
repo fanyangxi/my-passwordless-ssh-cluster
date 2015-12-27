@@ -11,5 +11,5 @@ The scripts have been tested with vagrant, on ubuntu 14.04.
 
 ### After processing:
 - The password of linux user vagrant will be set to 'a', on both master and slave nodes.
-- *Known Issue*: You must manually type in the password 'a' when you try to 'vagrant ssh' the slave node. This's because the authorized_keys file has been replaced on slave nodes.
+- *Known Issue*: You must manually type in the password 'a' when you try to 'vagrant ssh' the slave node. This's because the original authorized_keys file has been replaced on slave nodes.
 
