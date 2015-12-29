@@ -15,6 +15,13 @@ else
     sudo addgroup $THE_GROUP_NAME
 fi
 
+# adding hadoop-grouop to sudoers.d (NOPASSWORD)
+sudo su -c "
+cat >> /etc/sudoers.d/hadoop-users <<EOF
+%$THE_GROUP_NAME ALL=(ALL) NOPASSWD:ALL
+EOF
+"
+
 # Create hadoop user
 THE_USER_NAME=hadoopuser
 THE_USER_PASSWORD=a

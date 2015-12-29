@@ -30,9 +30,18 @@ sshpass -p 'a' ssh-copy-id -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pub $HD_
 sshpass -p 'a' ssh -o StrictHostKeyChecking=no $HD_USER@$HD_MASTER_ADDRESS
 EOF
 
+######: 
+# Set/clear hosts file
+sudo su -c "
+cat >/etc/hosts <<EOF
+127.0.0.1    localhost
+192.168.3.2  hd-master
+EOF
+"
 
 # key file change notification
-# after other slave updated the (authorized_keys & known_hosts), master need to push these 2 files to all other slave
+# - after other slave updated the (authorized_keys & known_hosts), master will push these 2 files to all other slaves
+# - after other slave updated the hosts file, master will push this change to all other slaves
 sudo apt-get install incron
 sudo cat > /etc/incron.allow <<EOF
 $HD_USER
@@ -40,6 +49,7 @@ EOF
 sudo chmod 777 /var/spool/incron/
 cat > ~/temp-incron-tab.conf <<EOF
 /home/$HD_USER/.ssh IN_MODIFY,IN_CLOSE_WRITE sh /home/$HD_USER/icron-job-key-change-notification.conf
+/etc/hosts IN_MODIFY,IN_CLOSE_WRITE sh /home/$HD_USER/icron-job-hosts-change-notification.conf
 EOF
 sudo incrontab -u $HD_USER ~/temp-incron-tab.conf
 sudo rm ~/temp-incron-tab.conf
