@@ -1,0 +1,132 @@
+
+
+# Add/update core-site.xml on (Master and Slave) nodes
+# /home/hadoopuser/hadoop/etc/hadoop/core-site.xml (Other Options) 
+====================================================
+<property>
+  <name>hadoop.tmp.dir</name>
+  <value>/home/hadoopuser/tmp</value>
+  <description>Temporary Directory.</description>
+</property>
+
+<property>
+  <name>fs.defaultFS</name>
+  <value>hdfs://192.168.3.2:54310</value>
+  <description>Use HDFS as file storage engine</description>
+</property>
+
+
+
+# Add/update mapred-site.xml on (Master) node only with following options.
+# /home/hadoopuser/hadoop/etc/hadoop/mapred-site.xml (Other Options)
+====================================================
+<property>
+ <name>mapreduce.jobtracker.address</name>
+ <value>192.168.3.2:54311</value>
+ <description>The host and port that the MapReduce job tracker runs
+  at. If “local”, then jobs are run in-process as a single map and reduce task.
+ </description>
+</property>
+
+<property>
+ <name>mapreduce.framework.name</name>
+ <value>yarn</value>
+ <description>The framework for running mapreduce jobs</description>
+</property>
+
+
+# Add/update hdfs-site.xml on (Master and Slave) Nodes.
+# /home/hadoopuser/hadoop/etc/hadoop/hdfs-site.xml (Other Options)
+====================================================
+<property>
+ <name>dfs.replication</name>
+ <value>2</value>
+ <description>Default block replication.
+  The actual number of replications can be specified when the file is created.
+  The default is used if replication is not specified in create time.
+ </description>
+</property>
+
+<property>
+ <name>dfs.namenode.name.dir</name>
+ <value>/hadoop-data/hadoopuser/hdfs/namenode</value>
+ <description>Determines where on the local filesystem the DFS name node should store the name table(fsimage). If this is a comma-delimited list of directories then the name table is replicated in all of the directories, for redundancy.
+ </description>
+</property>
+
+<property>
+ <name>dfs.datanode.data.dir</name>
+ <value>/hadoop-data/hadoopuser/hdfs/datanode</value>
+ <description>Determines where on the local filesystem an DFS data node should store its blocks. If this is a comma-delimited list of directories, then data will be stored in all named directories, typically on different devices. Directories that do not exist are ignored.
+ </description>
+</property>
+
+
+# Add yarn-site.xml on (Master and Slave) Nodes. 
+# /home/hadoopuser/hadoop/etc/hadoop/yarn-site.xml
+====================================================
+<property>
+ <name>yarn.nodemanager.aux-services</name>
+ <value>mapreduce_shuffle</value>
+</property>
+
+<property>
+ <name>yarn.resourcemanager.scheduler.address</name>
+ <value>192.168.3.2:8030</value>
+</property> 
+
+<property>
+ <name>yarn.resourcemanager.address</name>
+ <value>192.168.3.2:8032</value>
+</property>
+
+<property>
+  <name>yarn.resourcemanager.webapp.address</name>
+  <value>192.168.3.2:8088</value>
+</property>
+
+<property>
+  <name>yarn.resourcemanager.resource-tracker.address</name>
+  <value>192.168.3.2:8031</value>
+</property>
+
+<property>
+  <name>yarn.resourcemanager.admin.address</name>
+  <value>192.168.3.2:8033</value>
+</property>
+
+
+# Add/update slaves file on (Master node only).
+# /home/hadoopuser/hadoop/etc/hadoop/slaves
+====================================================
+192.168.3.2
+192.168.3.21
+192.168.3.22
+
+
+
+# Copy the config files from master to slave
+scp -o StrictHostKeyChecking=no -r hadoopuser@hd-master:/home/hadoopuser/hadoop /home/hadoopuser/
+scp hadoopuser@hd-master:/home/hadoopuser/hadoop/etc/hadoop/core-site.xml /home/hadoopuser/hadoop/etc/hadoop/
+scp hadoopuser@hd-master:/home/hadoopuser/hadoop/etc/hadoop/hadoop-env.sh /home/hadoopuser/hadoop/etc/hadoop/
+scp hadoopuser@hd-master:/home/hadoopuser/hadoop/etc/hadoop/\{core-site.xml,mapred-site.xml,yarn-site.xml\} /home/hadoopuser/hadoop/etc/hadoop/
+
+
+
+# Start the Distributed Format System: 
+# Run the following on master node command to start the DFS.
+/home/hadoopuser/hadoop/sbin/start-dfs.sh
+
+
+# Start the Yarn MapReduce Job tracker
+/home/hadoopuser/hadoop/sbin/start-yarn.sh
+
+# Access web app:
+http://192.168.3.2:8088/cluster/nodes
+
+
+# Execute a MapReduce example now
+hadoop jar /home/hadoopuser/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.6.3.jar pi 30 100
+
+
+

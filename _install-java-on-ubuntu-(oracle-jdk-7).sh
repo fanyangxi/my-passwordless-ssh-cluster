@@ -7,6 +7,8 @@
 # http://download.oracle.com/otn-pub/java/jdk/7u80-b15/jdk-7u80-linux-x64.tar.gz
 ####################
 
+HD_USER=hadoopuser
+
 # 1. Install packages
 sudo apt-get -y --force-yes install python-software-properties debconf-utils
 sudo add-apt-repository -y ppa:webupd8team/java
@@ -19,23 +21,19 @@ sudo update-java-alternatives -s java-7-oracle
 
 
 # # 2. Set Java environment variables:
-# sudo update-alternatives --config java
-
-# sudo su -c cat >> /etc/environment << EOF
-# JAVA_HOME=/usr/lib/jvm/java-7-oracle
-# CLASSPATH=.:$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
-# PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin
-# EOF
-
-cat >> ~/.bashrc <<\EOF
+cat >> /home/$HD_USER/.bashrc <<EOF
 # Set Java environment variables
-JAVA_HOME=/usr/lib/jvm/java-7-oracle
-CLASSPATH=.:$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
-PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin
+export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+export CLASSPATH=.:\$CLASSPATH:\$JAVA_HOME/lib:\$JAVA_HOME/jre/lib
+export PATH=\$PATH:\$JAVA_HOME/bin:\$JAVA_HOME/jre/bin
 EOF
+
+# Manually run + select
+# sudo update-alternatives --config java 
 
 # 3. Verifying
 java -version
+
 
 #####################
 # export JAVA_HOME=/usr/java/jdk1.6.0_31
@@ -49,4 +47,10 @@ java -version
 # echo 'PGSYSCONFDIR=“/etc:/var/lib"' >> /etc/environment
 # sudo cat >> /etc/environment << EOF
 # JAVA_HOME="/etc:/var/lib"
+# EOF
+
+# sudo su -c cat >> /etc/environment << EOF
+# JAVA_HOME=/usr/lib/jvm/java-7-oracle
+# CLASSPATH=.:$CLASSPATH:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+# PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin
 # EOF
