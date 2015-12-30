@@ -112,7 +112,6 @@ scp hadoopuser@hd-master:/home/hadoopuser/hadoop/etc/hadoop/hadoop-env.sh /home/
 scp hadoopuser@hd-master:/home/hadoopuser/hadoop/etc/hadoop/\{core-site.xml,mapred-site.xml,yarn-site.xml\} /home/hadoopuser/hadoop/etc/hadoop/
 
 
-
 # Start the Distributed Format System: 
 # Run the following on master node command to start the DFS.
 /home/hadoopuser/hadoop/sbin/start-dfs.sh
@@ -120,6 +119,7 @@ scp hadoopuser@hd-master:/home/hadoopuser/hadoop/etc/hadoop/\{core-site.xml,mapr
 
 # Start the Yarn MapReduce Job tracker
 /home/hadoopuser/hadoop/sbin/start-yarn.sh
+
 
 # Access web app:
 http://192.168.3.2:8088/cluster/nodes
